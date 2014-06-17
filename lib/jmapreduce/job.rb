@@ -14,6 +14,15 @@ class JMapReduceJob
   def initialize
     @jmapreduce_job_key = Text.new
     @jmapreduce_job_value = Text.new
+    @jmapreduce_conf_settings = {}
+  end
+
+  def set(key, value)
+    @jmapreduce_conf_settings[key] = value
+  end
+
+  def get_conf_settings
+    @jmapreduce_conf_settings
   end
   
   def setup(&blk)

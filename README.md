@@ -1,4 +1,4 @@
-JMapReduce
+JRuby-MapReduce
 ==========
 
 JMapReduce provides a simple DSL to run map/reduce jobs on Hadoop in the JVM via JRuby. Because it runs in the JVM, you have access to all the Java objects provided to the Map/Reduce jobs at runtime and can leverage other Java libraries inside your jobs.
@@ -6,7 +6,7 @@ JMapReduce provides a simple DSL to run map/reduce jobs on Hadoop in the JVM via
 Install
 -------
 
-> $ gem install jmapreduce
+> $ gem install jruby-mapreduce
 
 Usage
 -----
@@ -176,6 +176,7 @@ Todo list
 Author
 -------
 
+Shinji Ikeda <gm.ikeda@gmail.com>
 Abhinay Mehta <abhinay.mehta@gmail.com>
 
 Copyright
