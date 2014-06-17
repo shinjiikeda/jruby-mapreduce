@@ -2,12 +2,13 @@ require 'java'
 
 java_package 'org.fingertap.jmapreduce'
 
-import java.io.IOException
+java_import 'java.io.IOException'
 
-import org.apache.hadoop.io.Text
-import org.apache.hadoop.mapreduce.Reducer
+java_import 'org.apache.hadoop.io.Text'
+java_import 'org.apache.hadoop.io.NullWritable'
+java_import 'org.apache.hadoop.mapreduce.Reducer'
 
-import org.fingertap.jmapreduce.JMapReduce
+java_import 'org.fingertap.jmapreduce.JMapReduce'
 
 class JReducer < Reducer
   
@@ -35,6 +36,7 @@ class JReducer < Reducer
   def reduce(key, values, context)
     if @jmapreduce_reducer_job.reducer.nil?
       values.each do |value|
+        #value = NullWritable.get() if value == nil
         context.write(key, value)
       end
       return

@@ -33,7 +33,7 @@ class Runner
   end
   
   def cmd
-    "#{hadoop_cmd} jar #{main_jar_path} #{JAVA_MAIN_CLASS} #{file_args} #{jars_args} #{conf_args} #{archived_args} #{mapred_args} #{properties_args}"
+    "#{hadoop_cmd} jar #{main_jar_path} #{JAVA_MAIN_CLASS} #{file_args} #{jars_args} #{conf_args} #{archived_args} #{mapred_args} \"#{properties_args}\""
   end
   
   def jars_args

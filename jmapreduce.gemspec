@@ -2,16 +2,16 @@ Gem::Specification.new do |s|
   s.homepage    = "https://bitbucket.org/abhinaymehta/jmapreduce"
 
   s.name        = 'jmapreduce'
-  s.version     = '0.1'
+  s.version     = '0.5'
   s.date        = "#{Time.now.strftime('%Y-%m-%d')}"
 
   s.description = "JMapReduce is JRuby Map/Reduce Framework built on top of the Hadoop Distributed computing platform."
   s.summary     = "Map/Reduce Framework"
 
-  s.authors     = ["Abhinay Mehta"]
-  s.email       = "abhinay.mehta@gmail.com"
+  s.authors     = ["Shinji Ikeda", "Abhinay Mehta"]
+  s.email       = "gm.ikeda@gmail.com"
 
-  s.add_dependency("jruby-jars", "~> 1.6")
+  s.add_dependency("jruby-jars", "~> 1.7")
 
   s.executables = %w[jmapreduce]
 

@@ -2,13 +2,13 @@ require 'java'
 
 java_package 'org.fingertap.jmapreduce'
 
-import org.fingertap.jmapreduce.ValuePacker
-import org.fingertap.jmapreduce.JsonProperty
+java_import 'org.fingertap.jmapreduce.ValuePacker'
+java_import 'org.fingertap.jmapreduce.JsonProperty'
 
-import org.apache.hadoop.io.Text
-import org.apache.hadoop.io.IntWritable
-import org.apache.hadoop.io.FloatWritable
-import org.apache.hadoop.io.LongWritable
+java_import 'org.apache.hadoop.io.Text'
+java_import 'org.apache.hadoop.io.IntWritable'
+java_import 'org.apache.hadoop.io.FloatWritable'
+java_import 'org.apache.hadoop.io.LongWritable'
 
 class JMapReduceJob
   def initialize

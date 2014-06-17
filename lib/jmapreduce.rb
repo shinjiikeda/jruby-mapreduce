@@ -2,22 +2,22 @@ require 'java'
 
 java_package 'org.fingertap.jmapreduce'
 
-import org.fingertap.jmapreduce.JsonProperty
-import org.fingertap.jmapreduce.JMapReduceJob
-import org.fingertap.jmapreduce.MapperWrapper
-import org.fingertap.jmapreduce.ReducerWrapper
+java_import 'org.fingertap.jmapreduce.JsonProperty'
+java_import 'org.fingertap.jmapreduce.JMapReduceJob'
+java_import 'org.fingertap.jmapreduce.MapperWrapper'
+java_import 'org.fingertap.jmapreduce.ReducerWrapper'
 
-import org.apache.hadoop.fs.Path
-import org.apache.hadoop.io.Text
-import org.apache.hadoop.io.IntWritable
+java_import 'org.apache.hadoop.fs.Path'
+java_import 'org.apache.hadoop.io.Text'
+java_import 'org.apache.hadoop.io.IntWritable'
 
-import org.apache.hadoop.mapreduce.Job
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.util.GenericOptionsParser
+java_import 'org.apache.hadoop.mapreduce.Job'
+java_import 'org.apache.hadoop.conf.Configuration'
+java_import 'org.apache.hadoop.util.GenericOptionsParser'
 
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
+java_import 'org.apache.hadoop.mapreduce.lib.input.TextInputFormat'
+java_import 'org.apache.hadoop.mapreduce.lib.input.FileInputFormat'
+java_import 'org.apache.hadoop.mapreduce.lib.output.FileOutputFormat'
 
 class JMapReduce
   def self.jobs
@@ -56,30 +56,36 @@ class JMapReduce
   java_signature 'void main(String[])'
   def self.main(args)
     conf = Configuration.new
-    otherArgs = GenericOptionsParser.new(conf, args).getRemainingArgs
+    otherArgs = GenericOptionsParser.new(conf, args).getRemainingArgs.to_ary
     
     if (otherArgs.size < 3)
       java.lang.System.err.println("Usage: JMapReduce <script> <in> <out>")
       java.lang.System.exit(2)
     end
     
-    script = otherArgs[0]
-    script_input = otherArgs[1]
-    script_output = otherArgs[2]
+    script = otherArgs.shift
+    opts = otherArgs.pop
+    script_output = otherArgs.pop
+    script_inputs = otherArgs
     conf.set('jmapreduce.script.name', script)
     
-    if otherArgs.size > 3
-      (3..(otherArgs.size-1)).each do |index|
-        if otherArgs[index].include?('=')
-          conf.set('jmapreduce.property', otherArgs[index])
-          set_properties(otherArgs[index])
-        end
-      end
+    if opts.include?('=')
+      conf.set('jmapreduce.property', opts)
+      set_properties(opts)
     end
+    
+    #if otherArgs.size > 3
+    #  (3..(otherArgs.size-1)).each do |index|
+    #    if otherArgs[index].include?('=')
+    #      conf.set('jmapreduce.property', otherArgs[index])
+    #      set_properties(otherArgs[index])
+    #    end
+    #  end
+    #end
     
     @@jobs ||= []
     require script
-    input = script_input
+    inputs = script_inputs
     output = script_output
     
     set_last_job
@@ -115,7 +121,9 @@ class JMapReduce
       job.setReducerClass(ReducerWrapper.java_class)
       job.setNumReduceTasks(jmapreduce_job.num_of_reduce_tasks)
       
-      FileInputFormat.addInputPath(job, Path.new(input))
+      inputs.each do | input |
+         FileInputFormat.addInputPath(job, Path.new(input))
+      end
       FileOutputFormat.setOutputPath(job, Path.new(output))
       
       jmapreduce_job.before_job_hook.call(job) if jmapreduce_job.before_job_hook

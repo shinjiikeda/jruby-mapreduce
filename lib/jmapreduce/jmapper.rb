@@ -2,12 +2,13 @@ require 'java'
 
 java_package 'org.fingertap.jmapreduce'
 
-import java.io.IOException
+java_import 'java.io.IOException'
 
-import org.apache.hadoop.io.Text
-import org.apache.hadoop.mapreduce.Mapper
+java_import 'org.apache.hadoop.io.Text'
+java_import 'org.apache.hadoop.mapreduce.Mapper'
 
-import org.fingertap.jmapreduce.JMapReduce
+java_import 'org.fingertap.jmapreduce.JMapReduce'
+
 
 class JMapper < Mapper
   
@@ -29,21 +30,26 @@ class JMapper < Mapper
     @jmapreduce_mapper_job.running_last_emit if conf.get('jmapreduce.last_job.mapper')
     
     @jmapreduce_mapper_job.get_setup.call if @jmapreduce_mapper_job.setup_exists
+    
+    @delimiter = conf.get('jmapreduce.delimiter', "\t")
   end
   
   java_signature 'void map(java.lang.Object, java.lang.Object, org.apache.hadoop.mapreduce.Mapper.Context) throws IOException'
   def map(key, value, context)
     value = value.to_s
     
-    if value.include?("\t")
-      tokens = value.split("\t")
-      key = tokens.first
-      value = tokens[1..-1].join("\t")
+    if value.include?(@delimiter)
+      tokens = value.split(@delimiter, 2)
+      key = tokens[0]
+      value = tokens[1]
+    else
+      key = value
+      value = nil
     end
     
     if @jmapreduce_mapper_job.mapper.nil?
-      @jmapreduce_mapper_key.set(key.to_s)
-      @jmapreduce_mapper_value.set(value.to_s)
+      @jmapreduce_mapper_key.set(key)
+      @jmapreduce_mapper_value.set(value)
       context.write(@jmapreduce_mapper_key, @jmapreduce_mapper_value)
       return
     end
