@@ -63,6 +63,8 @@ class JMapReduce
       java.lang.System.exit(2)
     end
     
+    conf.set("mapred.output.compress", "true");
+    
     script = otherArgs.shift
     opts = otherArgs.pop
     script_output = otherArgs.pop
@@ -98,7 +100,7 @@ class JMapReduce
       conf.set('jmapreduce.job.index', index.to_s)
       conf.set('jmapreduce.last_job.reducer', "true") if jmapreduce_job.is_last_reducer
       conf.set('jmapreduce.last_job.mapper', "true") if jmapreduce_job.is_last_mapper
-      
+
       if @@jobs.size > 1
         if index == @@jobs.size-1
           output = script_output
@@ -128,7 +130,7 @@ class JMapReduce
       
       jmapreduce_job.before_job_hook.call(job) if jmapreduce_job.before_job_hook
       job.waitForCompletion(true)
-      input = output
+      inputs = [ output ]
     end
     
     # clean up

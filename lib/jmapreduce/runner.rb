@@ -28,12 +28,17 @@ class Runner
   end
   
   def run
+    @tmp_files = []
+
+    cmd = "#{hadoop_cmd} jar #{main_jar_path} #{JAVA_MAIN_CLASS} #{file_args} #{jars_args} #{conf_args} #{archived_args} #{mapred_args} \"#{properties_args}\""
+    
     puts cmd
     exec cmd
-  end
-  
-  def cmd
-    "#{hadoop_cmd} jar #{main_jar_path} #{JAVA_MAIN_CLASS} #{file_args} #{jars_args} #{conf_args} #{archived_args} #{mapred_args} \"#{properties_args}\""
+    
+    # delete temporary files
+    @tmp_files.each do | tmp_file |
+      File.delete(tmp_file) if File.exists?(tmp_file)
+    end
   end
   
   def jars_args
@@ -61,6 +66,7 @@ class Runner
       tgz = "/tmp/jmapreduce-#{Process.pid}-#{Time.now.to_i}-#{rand(1000)}.tgz"
       system("cd #{dir} && tar -czf #{tgz} *")
       archived_files << "#{tgz}\##{File.basename(dir)}"
+      @tmp_files << tgz
     end
     
     "-archives #{archived_files.join(',')}"
