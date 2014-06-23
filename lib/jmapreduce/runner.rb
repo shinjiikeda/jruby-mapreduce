@@ -34,14 +34,16 @@ class Runner
     
     puts(cmd)
     
+    r = false
     begin
-      system(cmd)
+      r = system(cmd)
     ensure
       # delete temporary files
       @tmp_files.each do | tmp_file |
         File.delete(tmp_file) if File.exists?(tmp_file)
       end
     end
+    return r
   end
   
   def jars_args
