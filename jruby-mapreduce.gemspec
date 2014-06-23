@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/shinjiikeda/jmapreduce"
 
   s.name        = 'jruby-mapreduce'
-  s.version     = '0.5.2'
+  s.version     = '0.5.3'
   s.date        = "#{Time.now.strftime('%Y-%m-%d')}"
 
   s.description = "JMapReduce is JRuby Map/Reduce Framework built on top of the Hadoop Distributed computing platform."
